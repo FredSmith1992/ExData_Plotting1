@@ -21,25 +21,33 @@
 ## 3) set my R session's working directory to that folder
 
 
-#library(data.table)
-#library(dplyr)
-
 ## Plot #1 - histogram, x-axis label = "Global Active Power (kilowatts)", y-axis label = "Frequency", color is red, 
 
+## load data from file in the working directory
 HPC<-read.delim("household_power_consumption.txt",header=TRUE,sep=";")
 
+## I'm only setting the Date2 for now as 'll have fewer rows to update later once I use this one to filter the graphing data set
 HPC$Date2 <- as.Date(HPC$Date,"%d/%m/%Y")
 
+## create a smaller list from which to generate the graphs, getting only those for 2007/02/01 and 2007/02/02
 HPC2<-subset(HPC,Date2 == "2007-02-01" | Date2 == "2007-02-02")
 
-
+## create a numeric column -required by hist()- from the factor Global_active_power
 HPC2$GAP2 <- as.numeric(as.character(HPC2$Global_active_power))
 
+## generate the histogram
 hist(HPC2$GAP2,col="red", main="Global Active Power", xlab = "Global Active Power (kilowatts)" )
 
-## I was using copy.
+##
+## I was using dev.copy(), which  I've commented out here, but have read it is better to explicitly use the target device call -- png(), for example --
+## to ensure the parameters are clear. In the case of this particular plot, I'm explicitly setting the width and height to what was requested: 480px
+##
+## dev.copy(png, file = "geyserplot.png")
+##
+
+## Open png format device (in this case, a file)
 png(file="plot1.png",width=480,height=480)
+
 hist(HPC2$GAP2,col="red", main="Global Active Power", xlab = "Global Active Power (kilowatts)" )
 
 dev.off()
-
