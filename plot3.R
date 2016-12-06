@@ -20,7 +20,7 @@
 ## 2) extracted the contents of the zip file (it is a file named household_power_consumption.txt)
 ## 3) set my R session's working directory to that folder
 
-## Plot #2 - histogram, x-axis values = days of week, y-axis label = "Global Active Power (kilowatts)"
+## Plot #3 - histogram, x-axis values = days of week, y-axis label = "Global Active Power (kilowatts)"
 
 ## load data from file in the working directory
 HPC<-read.delim("household_power_consumption.txt",header=TRUE,sep=";")
@@ -35,17 +35,26 @@ HPC2<-subset(HPC,Date2 == "2007-02-01" | Date2 == "2007-02-02")
 HPC2$DateTime <- strptime(paste(as.character(HPC2$Date2), as.character(HPC2$Time)),  "%Y-%m-%d %H:%M:%S")
 
 ## plot the data
-with(HPC2,plot(DateTime, as.numeric(as.character(HPC2$Global_active_power)), main="", xlab = "", ylab = "Global Active Power (kilowatts)", type = "b", lwd = 1, pch = ".", cex.lab=0.75, cex.axis=0.75))
+with(HPC2,plot(DateTime, as.numeric(as.character(Sub_metering_1)), main="", xlab = "", ylab = "Energy sub metering", type = "b", lwd = 1, pch = ".", cex.lab=0.75, cex.axis=0.75))
+with(HPC2,lines(DateTime, as.numeric(as.character(Sub_metering_2)), col = "red"))
+with(HPC2,lines(DateTime, Sub_metering_3, col = "blue"))
+legend("topright", lty=c(1,1,1), lwd=c(1,1,1), col = c("black", "blue", "red"), legend = c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"))
 
 ##
-## I was using dev.copy(), which  I've commented out here, but have read it is better to explicitly use the target device call -- png(), for example --
-## to ensure the parameters are clear. In the case of this particular plot, I'm explicitly setting the width and height to what was requested: 480px
+## I was using dev.copy(), which  I've commented out here, but had read it is better to explicitly use the target device call (e.g., png())
+## to ensure the parameters are clear AND to make sure resizing doesn't cause problems.
+## In the case of this particular plot, the legend text was cut off once the width and height are set to the image width of 480px.
 ##
-## dev.copy(png, file = "geyserplot.png")
+## dev.copy(png, file = "plot3b.png")
 ##
 
-png(file="plot2.png",width=480,height=480)
+## Open png format device (in this case, a file)
+png(file="plot3.png",width=480,height=480)
 
-with(HPC2,plot(DateTime, as.numeric(as.character(HPC2$Global_active_power)), main="", xlab = "", ylab = "Global Active Power (kilowatts)", type = "b", lwd = 1, pch = ".", cex.lab=0.75, cex.axis=0.75))
+## yes, this is the same code as above for reasons described in the previous long comment
+with(HPC2,plot(DateTime, as.numeric(as.character(Sub_metering_1)), main="", xlab = "", ylab = "Energy sub metering", type = "b", lwd = 1, pch = ".", cex.lab=0.75, cex.axis=0.75))
+with(HPC2,lines(DateTime, as.numeric(as.character(Sub_metering_2)), col = "red"))
+with(HPC2,lines(DateTime, Sub_metering_3, col = "blue"))
+legend("topright", lty=c(1,1,1), lwd=c(1,1,1), col = c("black", "blue", "red"), legend = c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"))
 
 dev.off()
